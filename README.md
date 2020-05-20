@@ -11,6 +11,9 @@ Installation
 ==============
 ### CocoaPods
 1.pod 'TKCarouselView'
+
 2.pod install or po update
+
 3.#import <TKCarouselView.h>
+
 
