@@ -31,4 +31,4 @@ Usage
 
 ## License
 
-TKCarouselView is released under the MIT license. See [LICENSE](https://github.com/AFNetworking/AFNetworking/blob/master/LICENSE) for details.
+TKCarouselView is released under the MIT license. See [LICENSE](https://github.com/libtinker/TKCarouselView/blob/master/LICENSE) for details.
