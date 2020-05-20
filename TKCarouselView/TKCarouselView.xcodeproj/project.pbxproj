@@ -16,6 +16,7 @@
 		56612CDC247521080026E795 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 56612CDB247521080026E795 /* main.m */; };
 		56612CE6247521080026E795 /* TKCarouselViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 56612CE5247521080026E795 /* TKCarouselViewTests.m */; };
 		56612CF1247521080026E795 /* TKCarouselViewUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 56612CF0247521080026E795 /* TKCarouselViewUITests.m */; };
+		56612D01247522CB0026E795 /* TKCarouselView.m in Sources */ = {isa = PBXBuildFile; fileRef = 56612CFF247522CB0026E795 /* TKCarouselView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,8 @@
 		56612CEC247521080026E795 /* TKCarouselViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TKCarouselViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		56612CF0247521080026E795 /* TKCarouselViewUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKCarouselViewUITests.m; sourceTree = "<group>"; };
 		56612CF2247521080026E795 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		56612CFF247522CB0026E795 /* TKCarouselView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKCarouselView.m; sourceTree = "<group>"; };
+		56612D00247522CB0026E795 /* TKCarouselView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKCarouselView.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +144,8 @@
 		56612CFE247521CB0026E795 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				56612D00247522CB0026E795 /* TKCarouselView.h */,
+				56612CFF247522CB0026E795 /* TKCarouselView.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -277,6 +282,7 @@
 			files = (
 				56612CD1247520F60026E795 /* ViewController.m in Sources */,
 				56612CCB247520F60026E795 /* AppDelegate.m in Sources */,
+				56612D01247522CB0026E795 /* TKCarouselView.m in Sources */,
 				56612CDC247521080026E795 /* main.m in Sources */,
 				56612CCE247520F60026E795 /* SceneDelegate.m in Sources */,
 			);
