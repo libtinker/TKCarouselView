@@ -10,10 +10,11 @@ Demo Project
 Installation
 ==============
 ### CocoaPods
-1.pod 'TKCarouselView'
+1. Add `pod 'YYKit'` to your Podfile.
+2. Run `pod install` or `pod update`.
+3. Import \<YYKit/YYKit.h\>.
 
-2.pod install or po update
-
-3.#import <TKCarouselView.h>
+Usage
+==============
 
 
