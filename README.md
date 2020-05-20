@@ -1,3 +1,5 @@
 # TKCarouselView
-a carousel View tools
-#demo
+a carousel View tools.
+
+# demo
+
