@@ -4,7 +4,6 @@ a carousel View tools.
 Demo Project
 ==============
 
-![demo1](https://github.com/libtinker/TKCarouselView/blob/master/TKCarouselView/demo3.png)
 ![demo2](https://github.com/libtinker/TKCarouselView/blob/master/TKCarouselView/demo4.png)
 
 Installation
@@ -30,4 +29,6 @@ Usage
     }];
 ```
 
+## License
 
+TKCarouselView is released under the MIT license. See [LICENSE](https://github.com/AFNetworking/AFNetworking/blob/master/LICENSE) for details.
