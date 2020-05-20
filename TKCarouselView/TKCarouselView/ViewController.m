@@ -11,7 +11,7 @@
 
 @interface ViewController ()
 @property (nonatomic,strong)  TKCarouselView *carouselView;
-
+@property (nonatomic,strong) NSMutableDictionary *imageDict;
 @end
 
 @implementation ViewController
@@ -19,6 +19,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    _imageDict = [NSMutableDictionary dictionary];
+
     [self testTKCarouselView];
 }
 
@@ -33,17 +35,18 @@
 
     //这里要使用你喜欢的加载图片的框架
     [_carouselView reloadCarouselViewWithImageCount:array.count showImageBlock:^(UIButton *carouselButton, NSInteger index) {
-//        [carouselButton sd_setImageWithURL:[NSURL URLWithString:array[index]] forState:UIControlStateNormal];
+       NSData *data = self.imageDict[[NSString stringWithFormat:@"%@",@(index)]];
+        if (data == nil) {
+           data = [NSData dataWithContentsOfURL:[NSURL URLWithString:array[index]]];
+            if (data) {
+                [self.imageDict setObject:data forKey:[NSString stringWithFormat:@"%@",@(index)]];
+            }
+        }
+
+        [carouselButton setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
     } imgClicked:^(NSInteger index) {
 
     }];
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-        [_carouselView reloadCarouselViewWithImageCount:4 showImageBlock:^(UIButton *carouselButton, NSInteger index) {
-    //        [carouselButton sd_setImageWithURL:[NSURL URLWithString:array[index]] forState:UIControlStateNormal];
-        } imgClicked:^(NSInteger index) {
-
-        }];
-}
 @end
