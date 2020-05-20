@@ -15,7 +15,7 @@ typedef void(^TKShowButtonBlock)(UIButton *carouselButton,NSInteger index);
 + (instancetype)managerWithFrame:(CGRect)frame;
 
 //MARK:- 轮播图参数设置
-/**是否开启自动轮播（默认是开启状态）*/
+/**是否开启自动轮播（默认是开启状态,必须imageCount>1,否则轮播无意义）*/
 @property (nonatomic,assign) BOOL isAutoScroll;
 /**轮播间隔时间（默认为2秒）*/
 @property (nonatomic,assign) NSTimeInterval intervalTime;

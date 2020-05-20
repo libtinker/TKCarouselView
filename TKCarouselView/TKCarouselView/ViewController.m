@@ -25,25 +25,50 @@
 }
 
 - (void)testTKCarouselView {
-    NSArray *array = @[@"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1035996821,2050333048&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2094733030,1735566999&fm=26&gp=0.jpg",@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589959916914&di=3ffaeeae77748ab978d62a75adb60b31&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fmobile%2F2018-11-16%2F5bee3b66f074e.jpg",@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589959916914&di=c4d40170977959a6c65a565e7101a506&imgtype=0&src=http%3A%2F%2Fcdn.duitang.com%2Fuploads%2Fitem%2F201408%2F29%2F20140829173229_zaeva.thumb.700_0.jpeg"];
+    NSArray *array = @[@"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3658587479,3162190896&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1322896087,2736086242&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2716219330,3814054151&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2776433555,1185570728&fm=26&gp=0.jpg"];
 
-    _carouselView = [TKCarouselView managerWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 300)];
-    _carouselView.backgroundColor = UIColor.redColor;
+    _carouselView = [TKCarouselView managerWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.width/2)];
     _carouselView.currentSize = CGSizeMake(10, 4);
     _carouselView.otherSize = CGSizeMake(6, 4);
+    _carouselView.placeholderImageView.image = [UIImage imageNamed:@"placeholderImage.jpg"];
     [self.view addSubview:_carouselView];
 
+    NSLog(@"---------------------");
+    dispatch_queue_t queue = dispatch_queue_create("libtinker", DISPATCH_QUEUE_CONCURRENT);
+//    array = @[];//用于测试placeholderImageView
     //这里要使用你喜欢的加载图片的框架
     [_carouselView reloadCarouselViewWithImageCount:array.count showImageBlock:^(UIButton *carouselButton, NSInteger index) {
-       NSData *data = self.imageDict[[NSString stringWithFormat:@"%@",@(index)]];
+        //推荐使用sd等网络框架
+        
+      __block UIImage *image;
+      __block NSData *data = self.imageDict[[NSString stringWithFormat:@"%@",@(index)]];
         if (data == nil) {
-           data = [NSData dataWithContentsOfURL:[NSURL URLWithString:array[index]]];
-            if (data) {
-                [self.imageDict setObject:data forKey:[NSString stringWithFormat:@"%@",@(index)]];
-            }
+            image = [UIImage imageNamed:@"placeholderImage.jpg"];
+            [carouselButton setImage:image forState:UIControlStateNormal];
+            [carouselButton setImage:image forState:UIControlStateSelected];
+            [carouselButton setImage:image forState:UIControlStateHighlighted];
+            dispatch_async(queue, ^{
+                data = [NSData dataWithContentsOfURL:[NSURL URLWithString:array[index]]];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (data) {
+                        [self.imageDict setObject:data forKey:[NSString stringWithFormat:@"%@",@(index)]];
+                        image = [UIImage imageWithData:data];
+                    }else {
+                        [self.imageDict removeObjectForKey:[NSString stringWithFormat:@"%@",@(index)]];
+                    }
+                    [carouselButton setImage:image forState:UIControlStateNormal];
+                    [carouselButton setImage:image forState:UIControlStateSelected];
+                    [carouselButton setImage:image forState:UIControlStateHighlighted];
+                });
+            });
+
+        }else {
+            image = [UIImage imageWithData:data];
+            [carouselButton setImage:image forState:UIControlStateNormal];
+            [carouselButton setImage:image forState:UIControlStateSelected];
+            [carouselButton setImage:image forState:UIControlStateHighlighted];
         }
 
-        [carouselButton setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
     } imgClicked:^(NSInteger index) {
 
     }];

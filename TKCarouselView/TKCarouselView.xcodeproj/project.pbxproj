@@ -17,6 +17,7 @@
 		56612CE6247521080026E795 /* TKCarouselViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 56612CE5247521080026E795 /* TKCarouselViewTests.m */; };
 		56612CF1247521080026E795 /* TKCarouselViewUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 56612CF0247521080026E795 /* TKCarouselViewUITests.m */; };
 		56612D01247522CB0026E795 /* TKCarouselView.m in Sources */ = {isa = PBXBuildFile; fileRef = 56612CFF247522CB0026E795 /* TKCarouselView.m */; };
+		681DD3EA247570B100308F2E /* placeholderImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 681DD3E9247570B100308F2E /* placeholderImage.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,8 @@
 		56612CF2247521080026E795 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		56612CFF247522CB0026E795 /* TKCarouselView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKCarouselView.m; sourceTree = "<group>"; };
 		56612D00247522CB0026E795 /* TKCarouselView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKCarouselView.h; sourceTree = "<group>"; };
+		681DD3E9247570B100308F2E /* placeholderImage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = placeholderImage.jpg; sourceTree = "<group>"; };
+		681DD3EC247578BF00308F2E /* demo.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = demo.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +110,7 @@
 		56612CC8247520F60026E795 /* TKCarouselView */ = {
 			isa = PBXGroup;
 			children = (
+				681DD3EB2475789B00308F2E /* Resources */,
 				56612CFE247521CB0026E795 /* Classes */,
 				56612CC9247520F60026E795 /* AppDelegate.h */,
 				56612CCA247520F60026E795 /* AppDelegate.m */,
@@ -148,6 +152,15 @@
 				56612CFF247522CB0026E795 /* TKCarouselView.m */,
 			);
 			path = Classes;
+			sourceTree = "<group>";
+		};
+		681DD3EB2475789B00308F2E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				681DD3E9247570B100308F2E /* placeholderImage.jpg */,
+				681DD3EC247578BF00308F2E /* demo.mp4 */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -254,6 +267,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				56612CD9247521080026E795 /* LaunchScreen.storyboard in Resources */,
+				681DD3EA247570B100308F2E /* placeholderImage.jpg in Resources */,
 				56612CD6247521080026E795 /* Assets.xcassets in Resources */,
 				56612CD4247520F60026E795 /* Main.storyboard in Resources */,
 			);

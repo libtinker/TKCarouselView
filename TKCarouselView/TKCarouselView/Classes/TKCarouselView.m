@@ -74,6 +74,7 @@ static const int imageBtnCount = 3;
 
     self.scrollView.hidden = imageCount >0 ? NO : YES;
     for (int i = 0;i < imageBtnCount; i++) {
+        if (imageCount == 0) break;
         UIButton *imageBtn = [[UIButton alloc] init];
         [self.scrollView addSubview:imageBtn];
     }
@@ -175,7 +176,7 @@ static const int imageBtnCount = 3;
 //开始计时器
 - (void)startTimer {
     [self stopTimer];
-    if (_isAutoScroll) {
+    if (_isAutoScroll && _imageCount>1) {
         NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:_intervalTime target:self selector:@selector(nextImage) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
         self.timer = timer;
