@@ -17,10 +17,12 @@ Installation
 Usage
 ==============
 
-```
+``` objective-c
     NSArray *imageNames = @[@"image_name_1.png",@"image_name_2.png",@"image_name_3.png",@"image_name_4.png"];
+    
     TKCarouselView *carouselView = [TKCarouselView managerWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.width/2)];
     [self.view addSubview:carouselView];
+    
     [carouselView reloadCarouselViewWithImageCount:imageNames.count showImageBlock:^(UIButton *carouselButton, NSInteger index) {
         [carouselButton setImage:[UIImage imageNamed:imageNames[index]] forState:UIControlStateNormal];
     } imgClicked:^(NSInteger index) {
