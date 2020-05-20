@@ -39,4 +39,11 @@
     }];
 }
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+        [_carouselView reloadCarouselViewWithImageCount:4 showImageBlock:^(UIButton *carouselButton, NSInteger index) {
+    //        [carouselButton sd_setImageWithURL:[NSURL URLWithString:array[index]] forState:UIControlStateNormal];
+        } imgClicked:^(NSInteger index) {
+
+        }];
+}
 @end

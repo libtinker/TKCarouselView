@@ -174,6 +174,7 @@ static const int imageBtnCount = 3;
 #pragma mark - 定时器
 //开始计时器
 - (void)startTimer {
+    [self stopTimer];
     if (_isAutoScroll) {
         NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:_intervalTime target:self selector:@selector(nextImage) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
