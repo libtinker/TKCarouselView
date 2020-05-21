@@ -2,34 +2,35 @@
 //  ZJJCarouselView.h
 //  ZJJCarouselViewExample
 //
-//  Created by 天空吸引我 on 2018/5/3.
-//  Copyright © 2018年 天空吸引我. All rights reserved.
+//  Created by libtinker on 2018/5/3.
+//  Copyright © 2018年 libtinker. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-typedef void(^TKShowButtonBlock)(UIButton *carouselButton,NSInteger index);
+typedef void(^TKItemAtIndexBlock)(UIImageView *imageView,NSInteger index);
 
 @interface TKCarouselView : UIView
 
-+ (instancetype)managerWithFrame:(CGRect)frame;
+//MARK:- CarouselView parameter setting
 
-//MARK:- 轮播图参数设置
-/**是否开启自动轮播（默认是开启状态,必须imageCount>1,否则轮播无意义）*/
+// Whether to turn on automatic rotoasting (the default is to turn on, it must be imageCount>1, otherwise rotoasting is meaningless)
 @property (nonatomic,assign) BOOL isAutoScroll;
-/**轮播间隔时间（默认为2秒）*/
+//Rotation interval (3 seconds by default)）
 @property (nonatomic,assign) NSTimeInterval intervalTime;
-/**当imageCount==0时才能生效*/
+// It takes effect when imageCount==0
 @property (nonatomic,strong) UIImageView *placeholderImageView;
 
-/// 刷新或者开启轮播图
-/// @param imageCount 需要轮播的数量
-/// @param showImageBlock UIButton的回调，用户给button设置图片通过index
-/// @param imgClicked 点击回调
-- (void)reloadCarouselViewWithImageCount:(NSUInteger)imageCount showImageBlock:(TKShowButtonBlock)showImageBlock imgClicked:(void(^)(NSInteger index))imgClicked;
+//MARK:- UIPageControl Related Settings (do not set the default to dots)
 
-//MARK:- UIPageControl相关设置
-@property (nonatomic,assign) CGSize currentSize;//当前页的size
-@property (nonatomic,assign) CGSize otherSize;//除了当前页的size
+//Current page dot size
+@property (nonatomic,assign) CGSize currentSize;
+//Except for the size of the dots on the current page
+@property (nonatomic,assign) CGSize otherSize;
 
+/// reload (Must be implemented)
+/// @param imageCount imageCount
+/// @param itemAtIndexBlock A view displayed on the screen
+/// @param imageClickedBlock The view is clicked
+- (void)reloadImageCount:(NSUInteger)imageCount itemAtIndexBlock:(TKItemAtIndexBlock)itemAtIndexBlock imageClickedBlock:(void(^)(NSInteger index))imageClickedBlock;
 @end

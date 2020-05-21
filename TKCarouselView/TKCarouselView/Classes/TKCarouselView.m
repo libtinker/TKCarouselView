@@ -2,17 +2,17 @@
 //  ZJJCarouselView.m
 //  ZJJCarouselViewExample
 //
-//  Created by 天空吸引我 on 2018/5/3.
-//  Copyright © 2018年 天空吸引我. All rights reserved.
+//  Created by libtinker on 2018/5/3.
+//  Copyright © 2018年 libtinker. All rights reserved.
 //
 
 #import "TKCarouselView.h"
 
-static const int imageBtnCount = 3;
+static const int imageViewCount = 3;
 
 @interface TKPageControl : UIPageControl
-@property (nonatomic,assign) CGSize currentPageSize;//当前页的size
-@property (nonatomic,assign) CGSize otherPageSize;//除了当前页的size
+@property (nonatomic,assign) CGSize currentPageSize;
+@property (nonatomic,assign) CGSize otherPageSize;
 @end
 
 @implementation TKPageControl
@@ -40,48 +40,61 @@ static const int imageBtnCount = 3;
 @property (nonatomic, strong) TKPageControl *pageControl;
 @property (nonatomic, strong) UIScrollView*scrollView;
 @property (nonatomic, assign) NSUInteger imageCount;
-@property (nonatomic, weak) NSTimer *timer;
-@property (nonatomic,copy) TKShowButtonBlock showImageBlock;
-@property (nonatomic,copy) void(^carouselViewdidSelectBlock) (NSInteger index);/**轮播图点击事件*/
+@property (nonatomic, weak  ) NSTimer *timer;
+@property (nonatomic, copy  ) TKItemAtIndexBlock itemAtIndexBlock;
+@property (nonatomic, copy  ) void(^imageClickedBlock) (NSInteger index);
+@property (nonatomic, assign) NSInteger currentPageIndex;//The subscript of the current screen
 
 @end
 
 @implementation TKCarouselView
 
-+ (instancetype)managerWithFrame:(CGRect)frame {
-    TKCarouselView *carouselView = [[TKCarouselView alloc] initWithFrame:frame];
-    carouselView.isAutoScroll = YES;
-    carouselView.intervalTime = 3.0f;
-    return carouselView;
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self configureDefaultParameters];
+    }
+    return self;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _intervalTime = 3.0;
-        _isAutoScroll = YES;
+        [self configureDefaultParameters];
     }
     return self;
 }
 
-- (void)reloadCarouselViewWithImageCount:(NSUInteger)imageCount showImageBlock:(TKShowButtonBlock)showImageBlock imgClicked:(void(^)(NSInteger index))imgClicked {
+- (void)configureDefaultParameters {
+    _intervalTime = 3.0;
+    _isAutoScroll = YES;
+    _imageCount = 0;
+    _currentPageIndex = 0;
+}
+
+- (void)reloadImageCount:(NSUInteger)imageCount itemAtIndexBlock:(TKItemAtIndexBlock)itemAtIndexBlock imageClickedBlock:(void(^)(NSInteger index))imageClickedBlock {
     self.placeholderImageView.hidden = imageCount == 0 ? NO : YES;
 
     _imageCount = imageCount;
-    _carouselViewdidSelectBlock = imgClicked;
-    _showImageBlock = showImageBlock;
+    _imageClickedBlock = imageClickedBlock;
+    _itemAtIndexBlock = itemAtIndexBlock;
 
     self.scrollView.hidden = imageCount >0 ? NO : YES;
-    for (int i = 0;i < imageBtnCount; i++) {
+    for (int i = 0;i < imageViewCount; i++) {
         if (imageCount == 0) break;
-        UIButton *imageBtn = [[UIButton alloc] init];
-        [self.scrollView addSubview:imageBtn];
+        UIImageView *imageView = [[UIImageView alloc] init];
+        imageView.userInteractionEnabled = YES;
+        [self.scrollView addSubview:imageView];
     }
 
     self.pageControl.hidden = imageCount>1 ? NO : YES;
     self.pageControl.numberOfPages = imageCount;
     self.pageControl.currentPage = 0;
+
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageViewClicked)];
+    [self.scrollView addGestureRecognizer:tap];
 
     [self setContent];
     [self startTimer];
@@ -90,27 +103,27 @@ static const int imageBtnCount = 3;
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     _scrollView.frame = self.bounds;
     CGFloat width = self.bounds.size.width;
     CGFloat height = self.bounds.size.height;
-    _scrollView.contentSize = CGSizeMake(width*imageBtnCount, 0);
+    _scrollView.contentSize = CGSizeMake(width*imageViewCount, 0);
     
     for (int i=0; i<_scrollView.subviews.count; i++) {
-        UIButton *imageBtn = self.scrollView.subviews[i];
-        imageBtn.frame = CGRectMake(i*width, 0, width, height);
-        [imageBtn addTarget:self action:@selector(imageBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        UIImageView *imageView = self.scrollView.subviews[i];
+        imageView.frame = CGRectMake(i*width, 0, width, height);
     }
-    //设置contentOffset,显示最中间的图片
+
+    //Show the middle image
     self.scrollView.contentOffset = CGPointMake(width, 0);
 }
 
 
-//设置显示内容
+//Set display content
 - (void)setContent{
     for (int i=0; i<self.scrollView.subviews.count; i++) {
         NSInteger index = _pageControl.currentPage;
-        UIButton *imgBtn = self.scrollView.subviews[i];
+        UIImageView *imageView = self.scrollView.subviews[i];
         if (i == 0) {
             index--;
         }else if (i == 2){
@@ -121,59 +134,56 @@ static const int imageBtnCount = 3;
         }else if (index == _pageControl.numberOfPages) {
             index = 0;
         }
-        imgBtn.tag = index;
-
-        if (self.showImageBlock) self.showImageBlock(imgBtn,index);
+        imageView.tag = index;
+        self.currentPageIndex = imageView.tag;
+        if (self.itemAtIndexBlock) self.itemAtIndexBlock(imageView,index);
     }
 }
 
-//状态改变之后更新显示内容
-- (void)updateContent {
+- (void)updateDisplayContent {
     CGFloat width = self.bounds.size.width;
     [self setContent];
     self.scrollView.contentOffset = CGPointMake(width, 0);
 }
 
-#pragma mark - UIScrollViewDelegate
+//MARK:- UIScrollViewDelegate
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSInteger page = 0;
-    //用来拿最小偏移量
+    //To get the minimum offset
     CGFloat minDistance = MAXFLOAT;
     
     for (int i=0; i<self.scrollView.subviews.count; i++) {
-        UIButton *imagBtn = self.scrollView.subviews[i];
+        UIImageView *imageView = self.scrollView.subviews[i];
         CGFloat distance = 0;
-        distance = ABS(imagBtn.frame.origin.x - scrollView.contentOffset.x);
+        distance = ABS(imageView.frame.origin.x - scrollView.contentOffset.x);
         if (distance<minDistance) {
             minDistance = distance;
-            page = imagBtn.tag;
+            page = imageView.tag;
         }
     }
     _pageControl.currentPage = page;
+    self.currentPageIndex = page;
 }
 
-//开始拖拽的时候停止计时器
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self stopTimer];
 }
 
-//结束拖拽的时候开始定时器
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     [self startTimer];
 }
 
-//结束拖拽的时候更新image内容
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    [self updateContent];
+    [self updateDisplayContent];
 }
 
-//scroll滚动动画结束的时候更新image内容
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-    [self updateContent];
+    [self updateDisplayContent];
 }
 
-#pragma mark - 定时器
-//开始计时器
+//MARK:- The timer
+
 - (void)startTimer {
     [self stopTimer];
     if (_isAutoScroll && _imageCount>1) {
@@ -183,27 +193,21 @@ static const int imageBtnCount = 3;
     }
 }
 
-//停止计时器
 - (void)stopTimer {
     if (self.timer) {
-        //结束计时
         [self.timer invalidate];
-        //计时器被系统强引用，必须手动释放
         self.timer = nil;
     }
 }
 
-//通过改变contentOffset * 2换到下一张图片
+//Get the next picture by changing contentOffset * 2
 - (void)nextImage {
     CGFloat width = self.bounds.size.width;
     [self.scrollView setContentOffset:CGPointMake(2 * width, 0) animated:YES];
 }
 
-- (void)imageBtnClicked:(UIButton *)button {
-    NSInteger index = button.tag;
-    if (_carouselViewdidSelectBlock) {
-        _carouselViewdidSelectBlock(index);
-    }
+- (void)imageViewClicked {
+    if (self.imageClickedBlock) self.imageClickedBlock(self.currentPageIndex);
 }
 
 //MARK:- getter -
