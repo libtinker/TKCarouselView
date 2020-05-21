@@ -22,10 +22,10 @@ Usage
     TKCarouselView *carouselView = [TKCarouselView managerWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.width/2)];
     [self.view addSubview:carouselView];
     
-    [carouselView reloadCarouselViewWithImageCount:imageNames.count showImageBlock:^(UIButton *carouselButton, NSInteger index) {
-        [carouselButton setImage:[UIImage imageNamed:imageNames[index]] forState:UIControlStateNormal];
-    } imgClicked:^(NSInteger index) {
-        NSLog(@"imgClicked:%@",@(index));
+    [carouselView reloadImageCount:imageNames.count itemAtIndexBlock:^(UIImageView *imageView, NSInteger index) {
+        imageView.image = [UIImage imageNamed:imageNames[index]];
+    } imageClickedBlock:^(NSInteger index) {
+        NSLog(@"%@",@(index));
     }];
 ```
 
