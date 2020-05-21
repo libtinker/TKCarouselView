@@ -4,7 +4,7 @@ a carousel View tools.
 Demo Project
 ==============
 
-![demo2](https://github.com/libtinker/TKCarouselView/blob/master/TKCarouselView/demo4.png)
+![demo](https://github.com/libtinker/TKCarouselView/blob/master/TKCarouselView/demo4.png)
 
 Installation
 ==============
