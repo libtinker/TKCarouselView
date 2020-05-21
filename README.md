@@ -19,7 +19,7 @@ Usage
 ``` objective-c
     NSArray *imageNames = @[@"image_name_1.png",@"image_name_2.png",@"image_name_3.png",@"image_name_4.png"];
     
-    TKCarouselView *carouselView = [TKCarouselView initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.width/2)];
+    TKCarouselView *carouselView = [[TKCarouselView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.width/2)];
     [self.view addSubview:carouselView];
     
     [carouselView reloadImageCount:imageNames.count itemAtIndexBlock:^(UIImageView *imageView, NSInteger index) {
