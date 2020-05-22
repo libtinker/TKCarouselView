@@ -77,6 +77,7 @@
                             UIImage *image = [UIImage imageWithData:data];
                             if (complete) complete(data,image,error);
                         }else {
+                            [self.imageDict removeObjectForKey:fileName];
                             if (complete) complete(nil,nil,error);
                         }
                     }];
