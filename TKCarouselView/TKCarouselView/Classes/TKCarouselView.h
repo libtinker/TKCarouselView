@@ -10,6 +10,10 @@
 
 typedef void(^TKItemAtIndexBlock)(UIImageView *imageView,NSInteger index);
 
+@interface TKPageControl : UIPageControl
+@property (nonatomic,assign) CGSize currentDotSize;//Current page dot size
+@property (nonatomic,assign) CGSize otherDotSize;//Except for the size of the dots on the current page
+@end
 @interface TKCarouselView : UIView
 
 //MARK:- CarouselView parameter setting
@@ -22,11 +26,7 @@ typedef void(^TKItemAtIndexBlock)(UIImageView *imageView,NSInteger index);
 @property (nonatomic,strong) UIImageView *placeholderImageView;
 
 //MARK:- UIPageControl Related Settings (do not set the default to dots)
-
-//Current page dot size
-@property (nonatomic,assign) CGSize currentSize;
-//Except for the size of the dots on the current page
-@property (nonatomic,assign) CGSize otherSize;
+@property (nonatomic, strong) TKPageControl *pageControl;
 
 /// reload (Must be implemented)
 /// @param imageCount imageCount

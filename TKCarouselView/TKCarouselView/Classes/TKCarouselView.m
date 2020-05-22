@@ -10,26 +10,21 @@
 
 static const int imageViewCount = 3;
 
-@interface TKPageControl : UIPageControl
-@property (nonatomic,assign) CGSize currentPageSize;
-@property (nonatomic,assign) CGSize otherPageSize;
-@end
-
 @implementation TKPageControl
 
 - (void)setCurrentPage:(NSInteger)currentPage {
     [super setCurrentPage:currentPage];
 
-    if (_currentPageSize.width==0||_currentPageSize.height==0||_otherPageSize.width==0||_otherPageSize.height==0) {
+    if (_currentDotSize.width==0||_currentDotSize.height==0||_otherDotSize.width==0||_otherDotSize.height==0) {
         return;
     }
     for (NSUInteger subviewIndex = 0; subviewIndex < self.subviews.count; subviewIndex++) {
         UIView *subview = [self.subviews objectAtIndex:subviewIndex];
         subview.layer.cornerRadius  = 2;
         if (subviewIndex == currentPage) {
-            [subview setFrame:CGRectMake(subview.frame.origin.x, subview.frame.origin.y, _currentPageSize.width, _currentPageSize.height)];
+            [subview setFrame:CGRectMake(subview.frame.origin.x, subview.frame.origin.y, _currentDotSize.width, _currentDotSize.height)];
         }else{
-            [subview setFrame:CGRectMake(subview.frame.origin.x, subview.frame.origin.y, _otherPageSize.width, _otherPageSize.height)];
+            [subview setFrame:CGRectMake(subview.frame.origin.x, subview.frame.origin.y, _otherDotSize.width, _otherDotSize.height)];
         }
     }
 }
@@ -37,7 +32,6 @@ static const int imageViewCount = 3;
 @end
 
 @interface TKCarouselView() <UIScrollViewDelegate>
-@property (nonatomic, strong) TKPageControl *pageControl;
 @property (nonatomic, strong) UIScrollView*scrollView;
 @property (nonatomic, assign) NSUInteger imageCount;
 @property (nonatomic, weak  ) NSTimer *timer;
@@ -230,7 +224,7 @@ static const int imageViewCount = 3;
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.pagingEnabled = YES;
         _scrollView.bounces = NO;
-        [self addSubview:_scrollView];
+        [self insertSubview:_scrollView atIndex:0];
     }
     return _scrollView;
 }
@@ -243,8 +237,6 @@ static const int imageViewCount = 3;
         _pageControl.frame = CGRectMake(0, self.bounds.size.height - 20, self.frame.size.width, 20);
         [self addSubview:_pageControl];
     }
-    _pageControl.currentPageSize = self.currentSize;
-    _pageControl.otherPageSize = self.otherSize;
     return _pageControl;
 }
 
