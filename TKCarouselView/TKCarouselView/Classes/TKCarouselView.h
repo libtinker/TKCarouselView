@@ -29,7 +29,7 @@ typedef void(^TKItemAtIndexBlock)(UIImageView *imageView,NSInteger index);
 @property (nonatomic, strong) TKPageControl *pageControl;
 
 /// reload (Must be implemented)
-/// @param imageCount imageCount
+/// @param imageCount imageCount (0-100)
 /// @param itemAtIndexBlock A view displayed on the screen
 /// @param imageClickedBlock The view is clicked
 - (void)reloadImageCount:(NSUInteger)imageCount itemAtIndexBlock:(TKItemAtIndexBlock)itemAtIndexBlock imageClickedBlock:(void(^)(NSInteger index))imageClickedBlock;

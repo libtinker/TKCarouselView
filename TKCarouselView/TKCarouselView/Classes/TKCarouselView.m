@@ -69,6 +69,10 @@ static const int imageViewCount = 3;
 }
 
 - (void)reloadImageCount:(NSUInteger)imageCount itemAtIndexBlock:(TKItemAtIndexBlock)itemAtIndexBlock imageClickedBlock:(void(^)(NSInteger index))imageClickedBlock {
+    NSAssert(imageCount >= 0 && imageCount <100, @"The number of images is not safe");
+    NSParameterAssert(itemAtIndexBlock);
+    NSParameterAssert(imageClickedBlock);
+
     self.placeholderImageView.hidden = imageCount == 0 ? NO : YES;
 
     _imageCount = imageCount;
