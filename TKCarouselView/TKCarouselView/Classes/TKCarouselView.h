@@ -26,7 +26,7 @@ typedef void(^TKItemAtIndexBlock)(UIImageView *imageView,NSInteger index);
 @property (nonatomic,strong) UIImageView *placeholderImageView;
 
 //MARK:- UIPageControl Related Settings (do not set the default to dots)
-@property (nonatomic, strong) TKPageControl *pageControl;
+@property (nonatomic,strong) TKPageControl *pageControl;
 
 /// reload (Must be implemented)
 /// @param imageCount imageCount (0-100)

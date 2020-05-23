@@ -66,6 +66,12 @@ static const int imageViewCount = 3;
     _isAutoScroll = YES;
     _imageCount = 0;
     _currentPageIndex = 0;
+    
+    for (int i = 0;i < imageViewCount; i++) {
+        UIImageView *imageView = [[UIImageView alloc] init];
+        imageView.userInteractionEnabled = YES;
+        [self.scrollView addSubview:imageView];
+    }
 }
 
 - (void)reloadImageCount:(NSUInteger)imageCount itemAtIndexBlock:(TKItemAtIndexBlock)itemAtIndexBlock imageClickedBlock:(void(^)(NSInteger index))imageClickedBlock {
@@ -80,19 +86,11 @@ static const int imageViewCount = 3;
     _itemAtIndexBlock = itemAtIndexBlock;
 
     self.scrollView.hidden = imageCount >0 ? NO : YES;
-    for (int i = 0;i < imageViewCount; i++) {
-        if (imageCount == 0) break;
-        UIImageView *imageView = [[UIImageView alloc] init];
-        imageView.userInteractionEnabled = YES;
-        [self.scrollView addSubview:imageView];
-    }
+    self.scrollView.scrollEnabled = imageCount > 1 ? YES : NO ;
 
     self.pageControl.hidden = imageCount>1 ? NO : YES;
     self.pageControl.numberOfPages = imageCount;
     self.pageControl.currentPage = 0;
-
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageViewClicked)];
-    [self.scrollView addGestureRecognizer:tap];
 
     [self setContent];
     [self startTimer];
@@ -128,7 +126,7 @@ static const int imageViewCount = 3;
             index++;
         }
         if (index<0) {
-            index = _pageControl.numberOfPages-1;
+            index = _pageControl.numberOfPages == 0 ? 0 : _pageControl.numberOfPages-1;
         }else if (index == _pageControl.numberOfPages) {
             index = 0;
         }
@@ -229,6 +227,8 @@ static const int imageViewCount = 3;
         _scrollView.pagingEnabled = YES;
         _scrollView.bounces = NO;
         [self insertSubview:_scrollView atIndex:0];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageViewClicked)];
+        [_scrollView addGestureRecognizer:tap];
     }
     return _scrollView;
 }
