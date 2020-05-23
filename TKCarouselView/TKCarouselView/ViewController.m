@@ -33,7 +33,9 @@
 
     _carouselView = [[TKCarouselView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.width/2)];
     _carouselView.pageControl.currentDotSize = CGSizeMake(10, 4);
-    _carouselView.pageControl.otherDotSize = CGSizeMake(6, 4);
+    _carouselView.pageControl.otherDotSize = CGSizeMake(8, 4);
+    _carouselView.pageControl.currentDotRadius = 2.0;
+    _carouselView.pageControl.otherDotRadius = 2.0;
     _carouselView.placeholderImageView.image = [UIImage imageNamed:@"placeholderImage.jpg"];
     [self.view addSubview:_carouselView];
 
@@ -58,7 +60,7 @@
 
 - (void)downloadDataWithURLString:(NSString *)URLString complete:(void(^)(NSData *data,UIImage *image,NSError *error))complete {
     NSString *fileName = [self tk_md5String:URLString];
-    NSString *filePath = [self filePathWithFileName:fileName];
+    NSString *filePath = [self filePathWithFileName:fileName ext:URLString.pathExtension];
     [self readMemoryWithFileName:fileName complete:^(NSData *data, NSError *error) {
         if (data) {
             UIImage *image = [UIImage imageWithData:data];
@@ -77,7 +79,6 @@
                             UIImage *image = [UIImage imageWithData:data];
                             if (complete) complete(data,image,error);
                         }else {
-                            [self.imageDict removeObjectForKey:fileName];
                             if (complete) complete(nil,nil,error);
                         }
                     }];
@@ -100,11 +101,16 @@
 
 //磁盘操作
 - (void)readDismemoryWithFileName:(NSString *)fileName complete:(void(^)(NSData *data,NSError *error))complete {
-    NSData *data = [NSData dataWithContentsOfFile:fileName];
-    if (data) {
-        if (complete) complete(data,nil);
+    if ([[NSFileManager defaultManager] fileExistsAtPath:fileName]) {
+       NSData *data = [NSData dataWithContentsOfFile:fileName];
+        if (data) {
+            if (complete) complete(data,nil);
+        }else {
+            NSError *error = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:4001 userInfo:@{NSLocalizedFailureReasonErrorKey:@"文件已损坏"}];
+                   if (complete) complete(nil,error);
+        }
     }else {
-        NSError *error = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:4001 userInfo:@{NSLocalizedFailureReasonErrorKey:@"磁盘中没有该数据"}];
+        NSError *error = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:4002 userInfo:@{NSLocalizedFailureReasonErrorKey:@"磁盘中没有该数据"}];
         if (complete) complete(nil,error);
     }
 }
@@ -124,10 +130,12 @@
     });
 }
 
-- (NSString *)filePathWithFileName:(NSString *)fileName {
-    return [[NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:fileName];
+- (NSString *)filePathWithFileName:(NSString *)fileName ext:(NSString *)ext{
+    return [[[NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:fileName] stringByAppendingPathExtension:ext];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (NSString *)tk_md5String:(NSString *)string {
     NSData *data =[string dataUsingEncoding:NSUTF8StringEncoding];
     unsigned char result[CC_MD5_DIGEST_LENGTH];
@@ -140,4 +148,6 @@
             result[12], result[13], result[14], result[15]
             ];
 }
+#pragma clang diagnostic pop
+
 @end

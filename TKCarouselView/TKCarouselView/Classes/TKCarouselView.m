@@ -20,11 +20,12 @@ static const int imageViewCount = 3;
     }
     for (NSUInteger subviewIndex = 0; subviewIndex < self.subviews.count; subviewIndex++) {
         UIView *subview = [self.subviews objectAtIndex:subviewIndex];
-        subview.layer.cornerRadius  = 2;
         if (subviewIndex == currentPage) {
             [subview setFrame:CGRectMake(subview.frame.origin.x, subview.frame.origin.y, _currentDotSize.width, _currentDotSize.height)];
+            subview.layer.cornerRadius  = _currentDotRadius;
         }else{
             [subview setFrame:CGRectMake(subview.frame.origin.x, subview.frame.origin.y, _otherDotSize.width, _otherDotSize.height)];
+            subview.layer.cornerRadius  = _otherDotRadius;
         }
     }
 }
