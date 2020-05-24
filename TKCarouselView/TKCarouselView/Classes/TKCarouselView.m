@@ -23,6 +23,7 @@ static const int imageViewCount = 3;
         self.currentDotRadius = 3.5;
         self.otherDotSize = CGSizeMake(7.0, 7.0);
         self.otherDotRadius = 3.5;
+        self.dotAlignmentType = DotAlignmentTypeCenter;
     }
     return self;
 }
@@ -45,11 +46,16 @@ static const int imageViewCount = 3;
         }
     }
     CGFloat newW = marginX-_dotSpacing;
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, newW, self.frame.size.height);
-    
-    CGPoint center = self.center;
-    center.x = self.superview.center.x;
-    self.center = center;
+    if (self.dotAlignmentType == DotAlignmentTypeCenter) {
+        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, newW, self.frame.size.height);
+        CGPoint center = self.center;
+        center.x = self.superview.center.x;
+        self.center = center;
+    }else if (self.dotAlignmentType == DotAlignmentTypeRight){
+        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, newW, self.frame.size.height);
+    }else if (self.dotAlignmentType == DotAlignmentTypeLeft) {
+        self.frame = CGRectMake(20, self.frame.origin.y, newW, self.frame.size.height);
+    }
 }
 
 @end
@@ -259,7 +265,7 @@ static const int imageViewCount = 3;
 - (TKPageControl *)pageControl {
     if (!_pageControl) {
         _pageControl = [[TKPageControl alloc] init];
-        _pageControl.frame = CGRectMake(0, self.bounds.size.height - 20, self.frame.size.width, 20);
+        _pageControl.frame = CGRectMake(20, self.bounds.size.height - 20, self.frame.size.width-40, 20);
         [self addSubview:_pageControl];
     }
     return _pageControl;

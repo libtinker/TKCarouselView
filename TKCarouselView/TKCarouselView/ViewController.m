@@ -106,6 +106,8 @@
 
    TKCarouselView * carouselView = [[TKCarouselView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.width + 40, self.view.bounds.size.width, self.view.bounds.size.width/2)];
     carouselView.placeholderImageView.image = [UIImage imageNamed:@"placeholderImage.jpg"];
+    carouselView.pageControl.frame = CGRectMake(self.view.bounds.size.width - 70, self.view.bounds.size.width/2-20, 50, 20);
+    carouselView.pageControl.dotAlignmentType = DotAlignmentTypeRight;
     [self.view addSubview:carouselView];
 
     NSLog(@"---------------------");
