@@ -1,10 +1,10 @@
 # TKCarouselView
-a carousel view tools.
+TKCarouselView is a roving graph tool that supports app styles such as jd and Tmall.
 
 Demo Project
 ==============
 
-![demo](https://github.com/libtinker/TKCarouselView/blob/master/TKCarouselView/demo4.png)
+![demo](https://github.com/libtinker/TKCarouselView/blob/master/TKCarouselView/demo.png)
 
 Installation
 ==============
