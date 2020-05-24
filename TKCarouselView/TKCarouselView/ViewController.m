@@ -13,7 +13,6 @@
 #define WeakSelf __weak typeof(self) weakSelf = self;
 
 @interface ViewController ()
-@property (nonatomic,strong)  TKCarouselView *carouselView;
 @property (nonatomic,strong) NSMutableDictionary *imageDict;
 @property (nonatomic,strong) dispatch_queue_t queue;
 @end
@@ -26,23 +25,26 @@
     self.queue = dispatch_queue_create("libtinker.TKCarouselView", DISPATCH_QUEUE_CONCURRENT);
     _imageDict = [NSMutableDictionary dictionary];
 
+    [self testJDTKCarouselView];
+    [self testTianMaoTKCarouselView];
     [self testTKCarouselView];
 }
-- (void)testTKCarouselView {
+- (void)testJDTKCarouselView {
     NSArray *array = @[@"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3658587479,3162190896&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1322896087,2736086242&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2716219330,3814054151&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2776433555,1185570728&fm=26&gp=0.jpg"];
 
-    _carouselView = [[TKCarouselView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.width/2)];
-    _carouselView.pageControl.currentDotSize = CGSizeMake(10, 4);
-    _carouselView.pageControl.otherDotSize = CGSizeMake(8, 4);
-    _carouselView.pageControl.currentDotRadius = 2.0;
-    _carouselView.pageControl.otherDotRadius = 2.0;
-    _carouselView.placeholderImageView.image = [UIImage imageNamed:@"placeholderImage.jpg"];
-    [self.view addSubview:_carouselView];
+   TKCarouselView * carouselView = [[TKCarouselView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.width/2)];
+    carouselView.pageControl.currentDotSize = CGSizeMake(18, 5);
+    carouselView.pageControl.otherDotSize = CGSizeMake(12, 5);
+    carouselView.pageControl.currentDotRadius = 2.0;
+    carouselView.pageControl.otherDotRadius = 2.0;
+    carouselView.pageControl.dotSpacing = 8.0;
+    carouselView.placeholderImageView.image = [UIImage imageNamed:@"placeholderImage.jpg"];
+    [self.view addSubview:carouselView];
 
     NSLog(@"---------------------");
     //    array = @[];//用于测试placeholderImageView
     WeakSelf
-    [_carouselView reloadImageCount:array.count itemAtIndexBlock:^(UIImageView *imageView, NSInteger index) {
+    [carouselView reloadImageCount:array.count itemAtIndexBlock:^(UIImageView *imageView, NSInteger index) {
         //推荐使用sd等网络框架
         [weakSelf downloadDataWithURLString:array[index] complete:^(NSData *data, UIImage *image, NSError *error) {
             if (image) {
@@ -55,8 +57,80 @@
     } imageClickedBlock:^(NSInteger index) {
         NSLog(@"%@",@(index));
     }];
-
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, 100, 22)];
+    label.text = @"京东轮播图";
+    label.backgroundColor = UIColor.whiteColor;
+    [carouselView addSubview:label];
 }
+
+
+- (void)testTianMaoTKCarouselView {
+    NSArray *array = @[@"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3658587479,3162190896&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1322896087,2736086242&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2716219330,3814054151&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2776433555,1185570728&fm=26&gp=0.jpg"];
+
+   TKCarouselView * carouselView = [[TKCarouselView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.width/2+20, self.view.bounds.size.width, self.view.bounds.size.width/2)];
+    carouselView.pageControl.currentDotSize = CGSizeMake(18, 2);
+    carouselView.pageControl.otherDotSize = CGSizeMake(18, 2);
+    carouselView.pageControl.currentDotRadius = 0;
+    carouselView.pageControl.otherDotRadius = 0;
+    carouselView.pageControl.pageIndicatorTintColor = [UIColor colorWithRed:127.0/255.0 green:143.0/255.0 blue:170.0/255.0 alpha:1.0];
+    carouselView.pageControl.dotSpacing = 0;
+    carouselView.placeholderImageView.image = [UIImage imageNamed:@"placeholderImage.jpg"];
+    [self.view addSubview:carouselView];
+
+    NSLog(@"---------------------");
+    //    array = @[];//用于测试placeholderImageView
+    WeakSelf
+    [carouselView reloadImageCount:array.count itemAtIndexBlock:^(UIImageView *imageView, NSInteger index) {
+        //推荐使用sd等网络框架
+        [weakSelf downloadDataWithURLString:array[index] complete:^(NSData *data, UIImage *image, NSError *error) {
+            if (image) {
+                imageView.image = image;
+            }else {
+                imageView.image = [UIImage imageNamed:@"placeholderImage.jpg"];
+            }
+        }];
+
+    } imageClickedBlock:^(NSInteger index) {
+        NSLog(@"%@",@(index));
+    }];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, 100, 22)];
+    label.text = @"天猫播图";
+    label.backgroundColor = UIColor.whiteColor;
+    [carouselView addSubview:label];
+}
+
+- (void)testTKCarouselView {
+    NSArray *array = @[@"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3658587479,3162190896&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1322896087,2736086242&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2716219330,3814054151&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2776433555,1185570728&fm=26&gp=0.jpg"];
+
+   TKCarouselView * carouselView = [[TKCarouselView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.width + 40, self.view.bounds.size.width, self.view.bounds.size.width/2)];
+    carouselView.placeholderImageView.image = [UIImage imageNamed:@"placeholderImage.jpg"];
+    [self.view addSubview:carouselView];
+
+    NSLog(@"---------------------");
+    //    array = @[];//用于测试placeholderImageView
+    WeakSelf
+    [carouselView reloadImageCount:array.count itemAtIndexBlock:^(UIImageView *imageView, NSInteger index) {
+        //推荐使用sd等网络框架
+        [weakSelf downloadDataWithURLString:array[index] complete:^(NSData *data, UIImage *image, NSError *error) {
+            if (image) {
+                imageView.image = image;
+            }else {
+                imageView.image = [UIImage imageNamed:@"placeholderImage.jpg"];
+            }
+        }];
+
+    } imageClickedBlock:^(NSInteger index) {
+        NSLog(@"%@",@(index));
+    }];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, 100, 22)];
+    label.text = @"普通轮播图";
+    label.backgroundColor = UIColor.whiteColor;
+    [carouselView addSubview:label];
+}
+
 
 - (void)downloadDataWithURLString:(NSString *)URLString complete:(void(^)(NSData *data,UIImage *image,NSError *error))complete {
     NSString *fileName = [self tk_md5String:URLString];

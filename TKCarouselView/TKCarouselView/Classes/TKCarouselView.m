@@ -12,22 +12,44 @@ static const int imageViewCount = 3;
 
 @implementation TKPageControl
 
-- (void)setCurrentPage:(NSInteger)currentPage {
-    [super setCurrentPage:currentPage];
-
-    if (_currentDotSize.width==0||_currentDotSize.height==0||_otherDotSize.width==0||_otherDotSize.height==0) {
-        return;
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.dotSpacing = 7.0;
+        self.currentPageIndicatorTintColor = [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1.0];
+        self.pageIndicatorTintColor = [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:0.3];
+        self.currentDotSize = CGSizeMake(7.0, 7.0);
+        self.currentDotRadius = 3.5;
+        self.otherDotSize = CGSizeMake(7.0, 7.0);
+        self.otherDotRadius = 3.5;
     }
+    return self;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    CGFloat marginX = 0;
     for (NSUInteger subviewIndex = 0; subviewIndex < self.subviews.count; subviewIndex++) {
         UIView *subview = [self.subviews objectAtIndex:subviewIndex];
-        if (subviewIndex == currentPage) {
-            [subview setFrame:CGRectMake(subview.frame.origin.x, subview.frame.origin.y, _currentDotSize.width, _currentDotSize.height)];
+        if (subviewIndex == self.currentPage) {
+            [subview setFrame:CGRectMake(marginX, subview.frame.origin.y, _currentDotSize.width, _currentDotSize.height)];
             subview.layer.cornerRadius  = _currentDotRadius;
+            marginX = _currentDotSize.width + _dotSpacing + marginX;
         }else{
-            [subview setFrame:CGRectMake(subview.frame.origin.x, subview.frame.origin.y, _otherDotSize.width, _otherDotSize.height)];
+            [subview setFrame:CGRectMake(marginX, subview.frame.origin.y, _otherDotSize.width, _otherDotSize.height)];
             subview.layer.cornerRadius  = _otherDotRadius;
+            marginX = _otherDotSize.width + _dotSpacing +marginX;
         }
     }
+    CGFloat newW = marginX-_dotSpacing;
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, newW, self.frame.size.height);
+    
+    CGPoint center = self.center;
+    center.x = self.superview.center.x;
+    self.center = center;
 }
 
 @end
@@ -79,28 +101,28 @@ static const int imageViewCount = 3;
     NSAssert(imageCount >= 0 && imageCount <100, @"The number of images is not safe");
     NSParameterAssert(itemAtIndexBlock);
     NSParameterAssert(imageClickedBlock);
-
+    
     self.placeholderImageView.hidden = imageCount == 0 ? NO : YES;
-
+    
     _imageCount = imageCount;
     _imageClickedBlock = imageClickedBlock;
     _itemAtIndexBlock = itemAtIndexBlock;
-
+    
     self.scrollView.hidden = imageCount >0 ? NO : YES;
     self.scrollView.scrollEnabled = imageCount > 1 ? YES : NO ;
-
+    
     self.pageControl.hidden = imageCount>1 ? NO : YES;
     self.pageControl.numberOfPages = imageCount;
     self.pageControl.currentPage = 0;
-
+    
     [self setContent];
     [self startTimer];
-
+    
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
+    
     _scrollView.frame = self.bounds;
     CGFloat width = self.bounds.size.width;
     CGFloat height = self.bounds.size.height;
@@ -110,7 +132,7 @@ static const int imageViewCount = 3;
         UIImageView *imageView = self.scrollView.subviews[i];
         imageView.frame = CGRectMake(i*width, 0, width, height);
     }
-
+    
     //Show the middle image
     self.scrollView.contentOffset = CGPointMake(width, 0);
 }
@@ -237,8 +259,6 @@ static const int imageViewCount = 3;
 - (TKPageControl *)pageControl {
     if (!_pageControl) {
         _pageControl = [[TKPageControl alloc] init];
-        _pageControl.currentPageIndicatorTintColor = [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1.0];
-        _pageControl.pageIndicatorTintColor = [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:0.3];
         _pageControl.frame = CGRectMake(0, self.bounds.size.height - 20, self.frame.size.width, 20);
         [self addSubview:_pageControl];
     }

@@ -15,8 +15,9 @@ typedef void(^TKItemAtIndexBlock)(UIImageView *imageView,NSInteger index);
 @property (nonatomic,assign) CGSize otherDotSize;//Except for the size of the dots on the current page
 @property (nonatomic,assign) CGFloat currentDotRadius;//The default is 0
 @property (nonatomic,assign) CGFloat otherDotRadius;//The default is 0
-
+@property (nonatomic,assign) CGFloat dotSpacing;//Spacing
 @end
+
 @interface TKCarouselView : UIView
 
 //MARK:- CarouselView parameter setting
