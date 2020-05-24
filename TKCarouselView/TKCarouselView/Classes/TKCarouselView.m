@@ -23,7 +23,6 @@ static const int imageViewCount = 3;
         self.currentDotRadius = 3.5;
         self.otherDotSize = CGSizeMake(7.0, 7.0);
         self.otherDotRadius = 3.5;
-        self.dotAlignmentType = DotAlignmentTypeCenter;
     }
     return self;
 }
@@ -32,6 +31,7 @@ static const int imageViewCount = 3;
 {
     [super layoutSubviews];
     
+    BOOL isDotAlignmentCenter = self.frame.size.width == self.superview.frame.size.width-40 ? YES : NO;
     CGFloat marginX = 0;
     for (NSUInteger subviewIndex = 0; subviewIndex < self.subviews.count; subviewIndex++) {
         UIView *subview = [self.subviews objectAtIndex:subviewIndex];
@@ -46,15 +46,13 @@ static const int imageViewCount = 3;
         }
     }
     CGFloat newW = marginX-_dotSpacing;
-    if (self.dotAlignmentType == DotAlignmentTypeCenter) {
+    if (isDotAlignmentCenter) {
         self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, newW, self.frame.size.height);
         CGPoint center = self.center;
         center.x = self.superview.center.x;
         self.center = center;
-    }else if (self.dotAlignmentType == DotAlignmentTypeRight){
+    }else {
         self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, newW, self.frame.size.height);
-    }else if (self.dotAlignmentType == DotAlignmentTypeLeft) {
-        self.frame = CGRectMake(20, self.frame.origin.y, newW, self.frame.size.height);
     }
 }
 
