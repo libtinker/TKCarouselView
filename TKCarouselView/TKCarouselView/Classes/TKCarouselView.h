@@ -16,6 +16,7 @@ typedef void(^TKItemAtIndexBlock)(UIImageView *imageView,NSInteger index);
 @property (nonatomic,assign) CGFloat currentDotRadius;//The default is 0
 @property (nonatomic,assign) CGFloat otherDotRadius;//The default is 0
 @property (nonatomic,assign) CGFloat dotSpacing;//Spacing
+@property (nonatomic,assign) CGFloat customerX;
 @end
 
 @interface TKCarouselView : UIView
