@@ -10,11 +10,15 @@
 
 static const int imageViewCount = 3;
 
+@interface TKPageControl ()
+@property (nonatomic,assign) NSInteger centerX;
+@end
+
 @implementation TKPageControl
 
-- (instancetype)init
+- (instancetype)initWithFrame:(CGRect)frame
 {
-    self = [super init];
+    self = [super initWithFrame:frame];
     if (self) {
         self.dotSpacing = 7.0;
         self.currentPageIndicatorTintColor = [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1.0];
@@ -24,6 +28,8 @@ static const int imageViewCount = 3;
         self.otherDotSize = CGSizeMake(7.0, 7.0);
         self.otherDotRadius = 3.5;
         self.customerX = 0;
+        self.centerX = [[NSString stringWithFormat:@"%f",(frame.size.width/2.0)].mutableCopy integerValue];
+
     }
     return self;
 }
@@ -47,9 +53,9 @@ static const int imageViewCount = 3;
     }
     CGFloat newW = marginX-_dotSpacing;
     if (self.customerX==0) {
-        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, newW, self.frame.size.height);
+        self.frame = CGRectMake(0, self.frame.origin.y, newW, self.frame.size.height);
         CGPoint center = self.center;
-        center.x = self.superview.center.x;
+        center.x = self.centerX;
         self.center = center;
     }else {
         self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, newW, self.frame.size.height);
@@ -262,8 +268,7 @@ static const int imageViewCount = 3;
 
 - (TKPageControl *)pageControl {
     if (!_pageControl) {
-        _pageControl = [[TKPageControl alloc] init];
-        _pageControl.frame = CGRectMake(0, self.bounds.size.height - 20, self.frame.size.width, 20);
+        _pageControl = [[TKPageControl alloc] initWithFrame:CGRectMake(0, self.bounds.size.height - 20, self.frame.size.width, 20)];
         [self addSubview:_pageControl];
     }
     return _pageControl;
