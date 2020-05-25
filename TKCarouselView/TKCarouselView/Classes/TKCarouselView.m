@@ -10,10 +10,6 @@
 
 static const int imageViewCount = 3;
 
-@interface TKPageControl ()
-@property (nonatomic,assign) NSInteger centerX;
-@end
-
 @implementation TKPageControl
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -27,9 +23,7 @@ static const int imageViewCount = 3;
         self.currentDotRadius = 3.5;
         self.otherDotSize = CGSizeMake(7.0, 7.0);
         self.otherDotRadius = 3.5;
-        self.customerX = 0;
-        self.centerX = [[NSString stringWithFormat:@"%f",(frame.size.width/2.0)].mutableCopy integerValue];
-
+        self.dotAlignmentType = DotAlignmentTypeCenter;
     }
     return self;
 }
@@ -37,8 +31,16 @@ static const int imageViewCount = 3;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
-    CGFloat marginX = 0;
+
+  
+    CGFloat marginX = (_otherDotSize.width + _dotSpacing)*(self.numberOfPages-1)+_currentDotSize.width;
+    if (self.dotAlignmentType == DotAlignmentTypeCenter) {
+        marginX = (self.bounds.size.width - marginX)/2;
+    }else if (self.dotAlignmentType == DotAlignmentTypeLeft){
+        marginX = 0;
+    }else if (self.dotAlignmentType == DotAlignmentTypeRight) {
+        marginX = self.bounds.size.width - marginX;
+    }
     for (NSUInteger subviewIndex = 0; subviewIndex < self.subviews.count; subviewIndex++) {
         UIView *subview = [self.subviews objectAtIndex:subviewIndex];
         if (subviewIndex == self.currentPage) {
@@ -50,15 +52,6 @@ static const int imageViewCount = 3;
             subview.layer.cornerRadius  = _otherDotRadius;
             marginX = _otherDotSize.width + _dotSpacing +marginX;
         }
-    }
-    CGFloat newW = marginX-_dotSpacing;
-    if (self.customerX==0) {
-        self.frame = CGRectMake(0, self.frame.origin.y, newW, self.frame.size.height);
-        CGPoint center = self.center;
-        center.x = self.centerX;
-        self.center = center;
-    }else {
-        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, newW, self.frame.size.height);
     }
 }
 

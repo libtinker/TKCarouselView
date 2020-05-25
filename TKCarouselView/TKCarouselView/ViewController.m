@@ -102,11 +102,10 @@
 }
 
 - (void)testTKCarouselView {
-    NSArray *array = @[@"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3658587479,3162190896&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1322896087,2736086242&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2716219330,3814054151&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2776433555,1185570728&fm=26&gp=0.jpg"];
+    NSArray *array = @[@"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3658587479,3162190896&fm=26&gp=0.jpg",@"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1322896087,2736086242&fm=26&gp=0.jpg"];
 
    TKCarouselView * carouselView = [[TKCarouselView alloc] initWithFrame:CGRectMake(16, self.view.bounds.size.width + 60, self.view.bounds.size.width-32, self.view.bounds.size.width/2)];
     carouselView.placeholderImageView.image = [UIImage imageNamed:@"placeholderImage.jpg"];
-    carouselView.pageControl.frame = CGRectMake(20, self.view.bounds.size.width/2-20, 50, 20);
     [self.view addSubview:carouselView];
 
     NSLog(@"---------------------");

@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, DotAlignmentType) {
+    DotAlignmentTypeLeft = 0,
+    DotAlignmentTypeCenter = 1,
+    DotAlignmentTypeRight = 2,
+};
+
 typedef void(^TKItemAtIndexBlock)(UIImageView *imageView,NSInteger index);
 
 @interface TKPageControl : UIPageControl
@@ -16,7 +22,7 @@ typedef void(^TKItemAtIndexBlock)(UIImageView *imageView,NSInteger index);
 @property (nonatomic,assign) CGFloat currentDotRadius;//The default is 0
 @property (nonatomic,assign) CGFloat otherDotRadius;//The default is 0
 @property (nonatomic,assign) CGFloat dotSpacing;//Spacing
-@property (nonatomic,assign) CGFloat customerX;
+@property (nonatomic,assign) DotAlignmentType dotAlignmentType;
 @end
 
 @interface TKCarouselView : UIView
