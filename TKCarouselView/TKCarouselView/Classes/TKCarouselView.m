@@ -31,7 +31,7 @@ static const int imageViewCount = 3;
 {
     [super layoutSubviews];
     
-    BOOL isDotAlignmentCenter = self.frame.size.width == self.superview.frame.size.width-40 ? YES : NO;
+    BOOL isDotAlignmentCenter = self.center.x == self.superview.center.x ? YES : NO;
     CGFloat marginX = 0;
     for (NSUInteger subviewIndex = 0; subviewIndex < self.subviews.count; subviewIndex++) {
         UIView *subview = [self.subviews objectAtIndex:subviewIndex];
