@@ -263,7 +263,7 @@ static const int imageViewCount = 3;
 - (TKPageControl *)pageControl {
     if (!_pageControl) {
         _pageControl = [[TKPageControl alloc] init];
-        _pageControl.frame = CGRectMake(20, self.bounds.size.height - 20, self.frame.size.width-40, 20);
+        _pageControl.frame = CGRectMake(0, self.bounds.size.height - 20, self.frame.size.width, 20);
         [self addSubview:_pageControl];
     }
     return _pageControl;
