@@ -32,7 +32,7 @@ static const int imageViewCount = 3;
 {
     [super layoutSubviews];
 
-  
+
     CGFloat marginX = (_otherDotSize.width + _dotSpacing)*(self.numberOfPages-1)+_currentDotSize.width;
     if (self.dotAlignmentType == DotAlignmentTypeCenter) {
         marginX = (self.bounds.size.width - marginX)/2;
@@ -92,7 +92,7 @@ static const int imageViewCount = 3;
     _isAutoScroll = YES;
     _imageCount = 0;
     _currentPageIndex = 0;
-    
+
     for (int i = 0;i < imageViewCount; i++) {
         UIImageView *imageView = [[UIImageView alloc] init];
         imageView.userInteractionEnabled = YES;
@@ -104,38 +104,38 @@ static const int imageViewCount = 3;
     NSAssert(imageCount >= 0 && imageCount <100, @"The number of images is not safe");
     NSParameterAssert(itemAtIndexBlock);
     NSParameterAssert(imageClickedBlock);
-    
+
     self.placeholderImageView.hidden = imageCount == 0 ? NO : YES;
-    
+
     _imageCount = imageCount;
     _imageClickedBlock = imageClickedBlock;
     _itemAtIndexBlock = itemAtIndexBlock;
-    
+
     self.scrollView.hidden = imageCount >0 ? NO : YES;
     self.scrollView.scrollEnabled = imageCount > 1 ? YES : NO ;
-    
+
     self.pageControl.hidden = imageCount>1 ? NO : YES;
     self.pageControl.numberOfPages = imageCount;
     self.pageControl.currentPage = 0;
-    
+
     [self setContent];
     [self startTimer];
-    
+
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     _scrollView.frame = self.bounds;
     CGFloat width = self.bounds.size.width;
     CGFloat height = self.bounds.size.height;
     _scrollView.contentSize = CGSizeMake(width*imageViewCount, 0);
-    
+
     for (int i=0; i<_scrollView.subviews.count; i++) {
         UIImageView *imageView = self.scrollView.subviews[i];
         imageView.frame = CGRectMake(i*width, 0, width, height);
     }
-    
+
     //Show the middle image
     self.scrollView.contentOffset = CGPointMake(width, 0);
 }
@@ -174,7 +174,7 @@ static const int imageViewCount = 3;
     NSInteger page = 0;
     //To get the minimum offset
     CGFloat minDistance = MAXFLOAT;
-    
+
     for (int i=0; i<self.scrollView.subviews.count; i++) {
         UIImageView *imageView = self.scrollView.subviews[i];
         CGFloat distance = 0;
@@ -209,7 +209,11 @@ static const int imageViewCount = 3;
 - (void)startTimer {
     [self stopTimer];
     if (_isAutoScroll && _imageCount>1) {
-        NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:_intervalTime target:self selector:@selector(nextImage) userInfo:nil repeats:YES];
+        __weak TKCarouselView  *weakSelf = self;
+       NSTimer *timer =  [NSTimer timerWithTimeInterval:_intervalTime repeats:YES block:^(NSTimer * _Nonnull timer) {
+           CGFloat width = weakSelf.bounds.size.width;
+           [weakSelf.scrollView setContentOffset:CGPointMake(2 * width, 0) animated:YES];
+        }];
         [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
         self.timer = timer;
     }
@@ -220,12 +224,6 @@ static const int imageViewCount = 3;
         [self.timer invalidate];
         self.timer = nil;
     }
-}
-
-//Get the next picture by changing contentOffset * 2
-- (void)nextImage {
-    CGFloat width = self.bounds.size.width;
-    [self.scrollView setContentOffset:CGPointMake(2 * width, 0) animated:YES];
 }
 
 - (void)imageViewClicked {
@@ -267,4 +265,7 @@ static const int imageViewCount = 3;
     return _pageControl;
 }
 
+-(void)dealloc {
+    NSLog(@"dealloc:%@",self.class);
+}
 @end
