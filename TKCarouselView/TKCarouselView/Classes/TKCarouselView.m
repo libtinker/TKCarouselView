@@ -8,6 +8,27 @@
 
 #import "TKCarouselView.h"
 
+@interface NSTimer (UnretainCycle)
++ (NSTimer *)tk_ScheduledTimerWithTimeInterval:(NSTimeInterval)inerval
+                                       repeats:(BOOL)repeats
+                                         block:(void(^)(NSTimer *timer))block;
+@end
+
+@implementation NSTimer (UnretainCycle)
+
++ (NSTimer *)tk_ScheduledTimerWithTimeInterval:(NSTimeInterval)inerval
+                                       repeats:(BOOL)repeats
+                                         block:(void(^)(NSTimer *timer))block {
+    return [NSTimer scheduledTimerWithTimeInterval:inerval target:self selector:@selector(blcokInvoke:) userInfo:[block copy] repeats:repeats];
+}
+
++ (void)blcokInvoke:(NSTimer *)timer {
+    void (^block)(NSTimer *timer) = timer.userInfo;
+    if (block) block(timer);
+}
+
+@end
+
 static const int imageViewCount = 3;
 
 @implementation TKPageControl
@@ -31,7 +52,6 @@ static const int imageViewCount = 3;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-
 
     CGFloat marginX = (_otherDotSize.width + _dotSpacing)*(self.numberOfPages-1)+_currentDotSize.width;
     if (self.dotAlignmentType == DotAlignmentTypeCenter) {
@@ -209,11 +229,12 @@ static const int imageViewCount = 3;
 - (void)startTimer {
     [self stopTimer];
     if (_isAutoScroll && _imageCount>1) {
-        __weak TKCarouselView  *weakSelf = self;
-       NSTimer *timer =  [NSTimer timerWithTimeInterval:_intervalTime repeats:YES block:^(NSTimer * _Nonnull timer) {
-           CGFloat width = weakSelf.bounds.size.width;
-           [weakSelf.scrollView setContentOffset:CGPointMake(2 * width, 0) animated:YES];
+        __weak TKCarouselView *weakSelf = self;
+        NSTimer *timer = [NSTimer tk_ScheduledTimerWithTimeInterval:_intervalTime repeats:YES block:^(NSTimer *timer) {
+            CGFloat width = weakSelf.bounds.size.width;
+            [weakSelf.scrollView setContentOffset:CGPointMake(2 * width, 0) animated:YES];
         }];
+
         [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
         self.timer = timer;
     }
