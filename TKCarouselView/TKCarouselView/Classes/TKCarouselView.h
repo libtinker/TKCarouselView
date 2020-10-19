@@ -44,4 +44,7 @@ typedef void(^TKItemAtIndexBlock)(UIImageView *imageView,NSInteger index);
 /// @param itemAtIndexBlock A view displayed on the screen
 /// @param imageClickedBlock The view is clicked
 - (void)reloadImageCount:(NSUInteger)imageCount itemAtIndexBlock:(TKItemAtIndexBlock)itemAtIndexBlock imageClickedBlock:(void(^)(NSInteger index))imageClickedBlock;
+
+//Scroll to the specified location
+- (void)scrollsToIndex:(NSInteger)index;
 @end

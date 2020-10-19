@@ -78,6 +78,9 @@ static const int imageViewCount = 3;
 @end
 
 @interface TKCarouselView() <UIScrollViewDelegate>
+{
+    NSInteger _startIndex;
+}
 @property (nonatomic, strong) UIScrollView*scrollView;
 @property (nonatomic, assign) NSUInteger imageCount;
 @property (nonatomic, weak  ) NSTimer *timer;
@@ -136,11 +139,18 @@ static const int imageViewCount = 3;
 
     self.pageControl.hidden = imageCount>1 ? NO : YES;
     self.pageControl.numberOfPages = imageCount;
-    self.pageControl.currentPage = 0;
+    self.pageControl.currentPage = _startIndex;
 
     [self setContent];
     [self startTimer];
 
+}
+
+- (void)scrollsToIndex:(NSInteger)index {
+    _startIndex = index;
+    self.pageControl.currentPage = index;
+    [self setContent];
+    [self startTimer];
 }
 
 - (void)layoutSubviews {
