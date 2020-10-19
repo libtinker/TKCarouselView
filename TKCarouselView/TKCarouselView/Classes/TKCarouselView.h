@@ -31,6 +31,9 @@ typedef void(^TKItemAtIndexBlock)(UIImageView *imageView,NSInteger index);
 
 // Whether to turn on automatic rotoasting (the default is to turn on, it must be imageCount>1, otherwise rotoasting is meaningless)
 @property (nonatomic,assign) BOOL isAutoScroll;
+
+/// Infinite shuffling (default is YES , the timer is off)
+@property (nonatomic,assign) BOOL isInfiniteShuffling;
 //Rotation interval (3 seconds by default)）
 @property (nonatomic,assign) NSTimeInterval intervalTime;
 // It takes effect when imageCount==0

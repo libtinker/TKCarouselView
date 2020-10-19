@@ -115,6 +115,7 @@ static const int imageViewCount = 3;
     _isAutoScroll = YES;
     _imageCount = 0;
     _currentPageIndex = 0;
+    _isInfiniteShuffling = YES;
 
     for (int i = 0;i < imageViewCount; i++) {
         UIImageView *imageView = [[UIImageView alloc] init];
@@ -155,7 +156,6 @@ static const int imageViewCount = 3;
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
     _scrollView.frame = self.bounds;
     CGFloat width = self.bounds.size.width;
     CGFloat height = self.bounds.size.height;
@@ -173,6 +173,7 @@ static const int imageViewCount = 3;
 
 //Set display content
 - (void)setContent{
+
     for (int i=0; i<self.scrollView.subviews.count; i++) {
         NSInteger index = _pageControl.currentPage;
         UIImageView *imageView = self.scrollView.subviews[i];
@@ -182,10 +183,17 @@ static const int imageViewCount = 3;
             index++;
         }
         if (index<0) {
+            if (!_isInfiniteShuffling) {
+                continue;
+            }
             index = _pageControl.numberOfPages == 0 ? 0 : _pageControl.numberOfPages-1;
         }else if (index == _pageControl.numberOfPages) {
+            if (!_isInfiniteShuffling) {
+                continue;
+            }
             index = 0;
         }
+
         imageView.tag = index;
         self.currentPageIndex = imageView.tag;
         if (self.itemAtIndexBlock) self.itemAtIndexBlock(imageView,index);
@@ -193,6 +201,9 @@ static const int imageViewCount = 3;
 }
 
 - (void)updateDisplayContent {
+    if (_isInfiniteShuffling==NO &&( self.currentPageIndex == 0 || self.currentPageIndex == _imageCount - 1)) {
+        return;
+    }
     CGFloat width = self.bounds.size.width;
     [self setContent];
     self.scrollView.contentOffset = CGPointMake(width, 0);
@@ -238,7 +249,7 @@ static const int imageViewCount = 3;
 
 - (void)startTimer {
     [self stopTimer];
-    if (_isAutoScroll && _imageCount>1) {
+    if (_isAutoScroll && _imageCount>1 && _isInfiniteShuffling) {
         __weak TKCarouselView *weakSelf = self;
         NSTimer *timer = [NSTimer tk_ScheduledTimerWithTimeInterval:_intervalTime repeats:YES block:^(NSTimer *timer) {
             CGFloat width = weakSelf.bounds.size.width;

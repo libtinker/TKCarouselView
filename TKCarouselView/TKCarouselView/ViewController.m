@@ -41,6 +41,7 @@
     carouselView.placeholderImageView.image = [UIImage imageNamed:@"placeholderImage.jpg"];
     [self.view addSubview:carouselView];
     [carouselView scrollsToIndex:2];
+    carouselView.isInfiniteShuffling = NO;
 
     NSLog(@"---------------------");
     //    array = @[];//用于测试placeholderImageView
