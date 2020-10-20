@@ -3,7 +3,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "TKCarouselView"
-  spec.version      = "1.1.9"
+  spec.version      = "1.2.0"
   spec.summary      = "TKCarouselView is a roving graph tool that supports app styles such as jd and Tmall."
   spec.homepage     = "https://github.com/libtinker/TKCarouselView"
   spec.license      = { :type => "MIT", :file => "LICENSE" }

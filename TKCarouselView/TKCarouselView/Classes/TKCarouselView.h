@@ -15,14 +15,33 @@ typedef NS_ENUM(NSInteger, DotAlignmentType) {
 };
 
 typedef void(^TKItemAtIndexBlock)(UIImageView *imageView,NSInteger index);
+//
+@interface TKPageControl : UIView
 
-@interface TKPageControl : UIPageControl
-@property (nonatomic,assign) CGSize currentDotSize;//Current page dot size
-@property (nonatomic,assign) CGSize otherDotSize;//Except for the size of the dots on the current page
-@property (nonatomic,assign) CGFloat currentDotRadius;//The default is 0
-@property (nonatomic,assign) CGFloat otherDotRadius;//The default is 0
-@property (nonatomic,assign) CGFloat dotSpacing;//Spacing
-@property (nonatomic,assign) DotAlignmentType dotAlignmentType;
+/// default is 0
+@property (nonatomic, assign) NSInteger numberOfPages;
+
+/// default is 0. Value is pinned to 0..numberOfPages-1
+@property (nonatomic, assign) NSInteger currentPage;
+
+/// The tint color for non-selected indicators. Default is nil.
+@property (nullable, nonatomic, strong) UIColor *pageIndicatorTintColor ;
+
+/// The tint color for the currently-selected indicators. Default is nil.
+@property (nullable, nonatomic, strong) UIColor *currentPageIndicatorTintColor;
+
+//Current page dot size
+@property (nonatomic,assign) CGSize currentDotSize;
+//Except for the size of the dots on the current page
+@property (nonatomic,assign) CGSize otherDotSize;
+//The default is 0
+@property (nonatomic,assign) CGFloat currentDotRadius;
+//The default is 0
+@property (nonatomic,assign) CGFloat otherDotRadius;
+//Spacing
+@property (nonatomic,assign) CGFloat dotSpacing;
+@property (nonatomic,assign) DotAlignmentType dotAlignmentType;;
+
 @end
 
 @interface TKCarouselView : UIView
@@ -32,8 +51,6 @@ typedef void(^TKItemAtIndexBlock)(UIImageView *imageView,NSInteger index);
 // Whether to turn on automatic rotoasting (the default is to turn on, it must be imageCount>1, otherwise rotoasting is meaningless)
 @property (nonatomic,assign) BOOL isAutoScroll;
 
-/// Infinite shuffling (default is YES , the timer is off)
-@property (nonatomic,assign) BOOL isInfiniteShuffling;
 //Rotation interval (3 seconds by default)）
 @property (nonatomic,assign) NSTimeInterval intervalTime;
 // It takes effect when imageCount==0

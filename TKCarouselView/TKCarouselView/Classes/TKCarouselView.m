@@ -49,6 +49,20 @@ static const int imageViewCount = 3;
     return self;
 }
 
+- (void)setNumberOfPages:(NSInteger)numberOfPages {
+    _numberOfPages = numberOfPages;
+    for (int i=0; i<numberOfPages; i++) {
+        UIView *dot = [[UIView alloc] initWithFrame:CGRectMake(_otherDotSize.width*i, (self.bounds.size.height-self.otherDotSize.height)/2, _otherDotSize.width, _otherDotSize.height)];
+        dot.backgroundColor = self.pageIndicatorTintColor;
+        [self addSubview:dot];
+    }
+}
+
+- (void)setCurrentPage:(NSInteger)currentPage {
+    _currentPage = currentPage;
+    [self layoutSubviews];
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -66,10 +80,12 @@ static const int imageViewCount = 3;
         if (subviewIndex == self.currentPage) {
             [subview setFrame:CGRectMake(marginX, subview.frame.origin.y, _currentDotSize.width, _currentDotSize.height)];
             subview.layer.cornerRadius  = _currentDotRadius;
+            subview.backgroundColor = self.currentPageIndicatorTintColor;
             marginX = _currentDotSize.width + _dotSpacing + marginX;
         }else{
             [subview setFrame:CGRectMake(marginX, subview.frame.origin.y, _otherDotSize.width, _otherDotSize.height)];
             subview.layer.cornerRadius  = _otherDotRadius;
+            subview.backgroundColor = self.pageIndicatorTintColor;
             marginX = _otherDotSize.width + _dotSpacing +marginX;
         }
     }
@@ -78,9 +94,7 @@ static const int imageViewCount = 3;
 @end
 
 @interface TKCarouselView() <UIScrollViewDelegate>
-{
-    NSInteger _startIndex;
-}
+
 @property (nonatomic, strong) UIScrollView*scrollView;
 @property (nonatomic, assign) NSUInteger imageCount;
 @property (nonatomic, weak  ) NSTimer *timer;
@@ -115,7 +129,6 @@ static const int imageViewCount = 3;
     _isAutoScroll = YES;
     _imageCount = 0;
     _currentPageIndex = 0;
-    _isInfiniteShuffling = YES;
 
     for (int i = 0;i < imageViewCount; i++) {
         UIImageView *imageView = [[UIImageView alloc] init];
@@ -140,7 +153,7 @@ static const int imageViewCount = 3;
 
     self.pageControl.hidden = imageCount>1 ? NO : YES;
     self.pageControl.numberOfPages = imageCount;
-    self.pageControl.currentPage = _startIndex;
+    self.pageControl.currentPage = self.currentPageIndex;
 
     [self setContent];
     [self startTimer];
@@ -148,10 +161,7 @@ static const int imageViewCount = 3;
 }
 
 - (void)scrollsToIndex:(NSInteger)index {
-    _startIndex = index;
-    self.pageControl.currentPage = index;
-    [self setContent];
-    [self startTimer];
+    self.currentPageIndex = index;
 }
 
 - (void)layoutSubviews {
@@ -183,14 +193,8 @@ static const int imageViewCount = 3;
             index++;
         }
         if (index<0) {
-            if (!_isInfiniteShuffling) {
-                continue;
-            }
             index = _pageControl.numberOfPages == 0 ? 0 : _pageControl.numberOfPages-1;
         }else if (index == _pageControl.numberOfPages) {
-            if (!_isInfiniteShuffling) {
-                continue;
-            }
             index = 0;
         }
 
@@ -201,11 +205,8 @@ static const int imageViewCount = 3;
 }
 
 - (void)updateDisplayContent {
-    if (_isInfiniteShuffling==NO &&( self.currentPageIndex == 0 || self.currentPageIndex == _imageCount - 1)) {
-        return;
-    }
-    CGFloat width = self.bounds.size.width;
     [self setContent];
+    CGFloat width = self.bounds.size.width;
     self.scrollView.contentOffset = CGPointMake(width, 0);
 }
 
@@ -249,7 +250,7 @@ static const int imageViewCount = 3;
 
 - (void)startTimer {
     [self stopTimer];
-    if (_isAutoScroll && _imageCount>1 && _isInfiniteShuffling) {
+    if (_isAutoScroll && _imageCount>1) {
         __weak TKCarouselView *weakSelf = self;
         NSTimer *timer = [NSTimer tk_ScheduledTimerWithTimeInterval:_intervalTime repeats:YES block:^(NSTimer *timer) {
             CGFloat width = weakSelf.bounds.size.width;
